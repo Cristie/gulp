@@ -1,3 +1,10 @@
+<!-- front-matter
+id: using-buffers
+title: Using Buffers
+hide_title: true
+sidebar_label: Using Buffers
+-->
+
 # Using buffers
 
 > Here is some information on creating gulp plugin that manipulates buffers.
@@ -9,8 +16,7 @@ If your plugin is relying on a buffer based library, you will probably choose to
 
 ```js
 var through = require('through2');
-var gutil = require('gulp-util');
-var PluginError = gutil.PluginError;
+var PluginError = require('plugin-error');
 
 // consts
 const PLUGIN_NAME = 'gulp-prefixer';

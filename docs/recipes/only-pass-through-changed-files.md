@@ -1,10 +1,17 @@
+<!-- front-matter
+id: only-pass-through-changed-files
+title: Only Pass Through Changed Files
+hide_title: true
+sidebar_label: Only Pass Through Changed Files
+-->
+
 # Only pass through changed files
 
 Files are passed through the whole pipe chain on every run by default. By using [gulp-changed](https://github.com/sindresorhus/gulp-changed) only changed files will be passed through. This can speed up consecutive runs considerably.
 
 
 ```js
-// npm install --save-dev gulp gulp-changed gulp-jscs gulp-uglify
+// npm install --save-dev gulp@next gulp-changed gulp-jscs gulp-uglify
 
 var gulp = require('gulp');
 var changed = require('gulp-changed');

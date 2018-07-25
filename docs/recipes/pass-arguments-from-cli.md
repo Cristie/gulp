@@ -1,7 +1,14 @@
+<!-- front-matter
+id: pass-arguments-from-cli
+title: Pass Arguments from the CLI
+hide_title: true
+sidebar_label: Pass Arguments from the CLI
+-->
+
 # Pass arguments from the command line
 
 ```js
-// npm install --save-dev gulp gulp-if gulp-uglify minimist
+// npm install --save-dev gulp@next gulp-if gulp-uglify minimist
 
 var gulp = require('gulp');
 var gulpif = require('gulp-if');

@@ -1,3 +1,10 @@
+<!-- front-matter
+id: recipes
+title: Recipes
+hide_title: true
+sidebar_label: Recipes
+-->
+
 # Recipes
 
 * [Automate release workflow](automate-release-workflow.md)
@@ -26,3 +33,5 @@
 * [Run Grunt Tasks from Gulp](run-grunt-tasks-from-gulp.md)
 * [Exports as tasks](exports-as-tasks.md)
 * [Rollup with rollup-stream](rollup-with-rollup-stream.md)
+* [Run gulp task via cron job](cron-task.md)
+* [Running shell commands](running-shell-commands.md)

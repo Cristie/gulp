@@ -1,3 +1,10 @@
+<!-- front-matter
+id: browserify-with-globs
+title: Browserify + Globs
+hide_title: true
+sidebar_label: Browserify + Globs
+-->
+
 # Browserify + Globs
 
 [Browserify + Uglify2](https://github.com/gulpjs/gulp/blob/master/docs/recipes/browserify-uglify-sourcemap.md) shows how to setup a basic gulp task to bundle a JavaScript file with its dependencies, and minify the bundle with UglifyJS while preserving source maps.
@@ -14,7 +21,7 @@ var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
 var globby = require('globby');
 var through = require('through2');
-var gutil = require('gulp-util');
+var log = require('gulplog');
 var uglify = require('gulp-uglify');
 var sourcemaps = require('gulp-sourcemaps');
 var reactify = require('reactify');
@@ -33,7 +40,7 @@ gulp.task('javascript', function () {
     .pipe(sourcemaps.init({loadMaps: true}))
       // Add gulp plugins to the pipeline here.
       .pipe(uglify())
-      .on('error', gutil.log)
+      .on('error', log.error)
     .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest('./dist/js/'));
 

@@ -1,3 +1,10 @@
+<!-- front-matter
+id: guidelines
+title: Guidelines
+hide_title: true
+sidebar_label: Guidelines
+-->
+
 # Guidelines
 
 > While these guidelines are totally optional, we **HIGHLY** recommend that everyone follows them. Nobody wants to use a bad plugin. These guidelines will actually help make your life easier by giving you assurance that your plugin fits well within gulp.
@@ -30,7 +37,7 @@
    - If you encounter an error **outside** the stream, such as invalid configuration while creating the stream, you may throw it.
 1. Prefix any errors with the name of your plugin
    - For example: `gulp-replace: Cannot do regexp replace on a stream`
-   - Use gulp-util's [PluginError](https://github.com/gulpjs/gulp-util#new-pluginerrorpluginname-message-options) class to make this easy
+   - Use [PluginError](https://github.com/gulpjs/plugin-error) module to make this easy
 1. Name your plugin appropriately: it should begin with "gulp-" if it is a gulp plugin
    - If it is not a gulp plugin, it should not begin with "gulp-"
 1. The type of `file.contents` should always be the same going out as it was when it came in
@@ -58,8 +65,7 @@ npm is open for everyone, and you are free to make whatever you want but these g
 ```js
 // through2 is a thin wrapper around node transform streams
 var through = require('through2');
-var gutil = require('gulp-util');
-var PluginError = gutil.PluginError;
+var PluginError = require('plugin-error');
 
 // Consts
 const PLUGIN_NAME = 'gulp-prefixer';

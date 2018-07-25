@@ -1,3 +1,10 @@
+<!-- front-matter
+id: combining-streams-to-handle-errors
+title: Combining Streams to Handle Errors
+hide_title: true
+sidebar_label: Combining Streams to Handle Errors
+-->
+
 # Combining streams to handle errors
 
 By default, emitting an error on a stream will cause it to be thrown unless it already has a listener attached to the `error` event. This gets a bit tricky when you're working with longer pipelines of streams.
@@ -12,16 +19,13 @@ var uglify = require('gulp-uglify');
 var gulp = require('gulp');
 
 gulp.task('test', function() {
-  var combined = combiner.obj([
-    gulp.src('bootstrap/js/*.js'),
-    uglify(),
-    gulp.dest('public/bootstrap')
-  ]);
-
-  // any errors in the above streams will get caught
-  // by this listener, instead of being thrown:
-  combined.on('error', console.error.bind(console));
-
-  return combined;
+  return combiner.obj([
+      gulp.src('bootstrap/js/*.js'),
+      uglify(),
+      gulp.dest('public/bootstrap')
+    ])
+    // any errors in the above streams will get caught
+    // by this listener, instead of being thrown:
+    .on('error', console.error.bind(console));
 });
 ```

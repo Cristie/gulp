@@ -1,3 +1,10 @@
+<!-- front-matter
+id: make-stream-from-buffer
+title: Make Stream from Buffer
+hide_title: true
+sidebar_label: Make Stream from Buffer
+-->
+
 # Make stream from buffer (memory contents)
 
 Sometimes you may need to start a stream with files that their contents are in a variable and not in a physical file. In other words, how to start a 'gulp' stream without using `gulp.src()`.
@@ -35,7 +42,6 @@ A simple and modular way to do this would be the following:
 
 ```js
 var gulp = require('gulp');
-var runSequence = require('run-sequence');
 var source = require('vinyl-source-stream');
 var vinylBuffer = require('vinyl-buffer');
 var tap = require('gulp-tap');
@@ -50,13 +56,13 @@ var memory = {}; // we'll keep our assets in memory
 gulp.task('load-lib-files', function() {
   // read the lib files from the disk
   return gulp.src('src/libs/*.js')
-  // concatenate all lib files into one
-  .pipe(concat('libs.concat.js'))
-  // tap into the stream to get each file's data
-  .pipe(tap(function(file) {
-    // save the file contents in memory
-    memory[path.basename(file.path)] = file.contents.toString();
-  }));
+    // concatenate all lib files into one
+    .pipe(concat('libs.concat.js'))
+    // tap into the stream to get each file's data
+    .pipe(tap(function(file) {
+      // save the file contents in memory
+      memory[path.basename(file.path)] = file.contents.toString();
+    }));
 });
 
 gulp.task('load-versions', function() {
@@ -79,9 +85,9 @@ gulp.task('write-versions', function() {
   availableVersions.forEach(function(v) {
     // make a new stream with fake file name
     var stream = source('final.' + v);
-    
+
     var streamEnd = stream;
-    
+
     // we load the data from the concatenated libs
     var fileContents = memory['libs.concat.js'] +
       // we add the version's data
@@ -100,41 +106,40 @@ gulp.task('write-versions', function() {
     .pipe(vinylBuffer())
     //.pipe(tap(function(file) { /* do something with the file contents here */ }))
     .pipe(gulp.dest('output'));
-    
+
     // add the end of the stream, otherwise the task would finish before all the processing
     // is done
     streams.push(streamEnd);
-    
+
   });
 
   return es.merge.apply(this, streams);
 });
 
 //============================================ our main task
-gulp.task('default', function(taskDone) {
-  runSequence(
-    ['load-lib-files', 'load-versions'],  // load the files in parallel
-    'write-versions',  // ready to write once all resources are in memory
-    taskDone           // done
-  );
-});
+gulp.task('default', gulp.series(
+    // load the files in parallel
+    gulp.parallel('load-lib-files', 'load-versions'),
+    // ready to write once all resources are in memory
+    'write-versions'
+  )
+);
 
 //============================================ our watcher task
 // only watch after having run 'default' once so that all resources
 // are already in memory
-gulp.task('watch', ['default'], function() {
-  gulp.watch('./src/libs/*.js', function() {
-    runSequence(
-      'load-lib-files',  // we only have to load the changed files
+gulp.task('watch', gulp.series(
+  'default',
+  function() {
+    gulp.watch('./src/libs/*.js', gulp.series(
+      'load-lib-files',
       'write-versions'
-    );
-  });
+    ));
 
-  gulp.watch('./src/versions/*.js', function() {
-    runSequence(
-      'load-versions',  // we only have to load the changed files
+    gulp.watch('./src/versions/*.js', gulp.series(
+      'load-lib-files',
       'write-versions'
-    );
-  });
-});
+    ));
+  }
+));
 ```

@@ -1,3 +1,10 @@
+<!-- front-matter
+id: automate-release-workflow
+title: Automate Release Workflow
+hide_title: true
+sidebar_label: Automate Release Workflow
+-->
+
 # Automate release workflow
 
 If your project follows a semantic versioning, it may be a good idea to automatize the steps needed to do a release.
@@ -6,11 +13,10 @@ Below you have a simple recipe that bumps the project version, commits the chang
 ``` javascript
 
 var gulp = require('gulp');
-var runSequence = require('run-sequence');
 var conventionalChangelog = require('gulp-conventional-changelog');
 var conventionalGithubReleaser = require('conventional-github-releaser');
 var bump = require('gulp-bump');
-var gutil = require('gulp-util');
+var log = require('gulplog');
 var git = require('gulp-git');
 var fs = require('fs');
 
@@ -38,7 +44,7 @@ gulp.task('bump-version', function () {
 // use minimist (https://www.npmjs.com/package/minimist) to determine with a
 // command argument whether you are doing a 'major', 'minor' or a 'patch' change.
   return gulp.src(['./bower.json', './package.json'])
-    .pipe(bump({type: "patch"}).on('error', gutil.log))
+    .pipe(bump({type: "patch"}).on('error', log.error))
     .pipe(gulp.dest('./'));
 });
 
@@ -48,17 +54,17 @@ gulp.task('commit-changes', function () {
     .pipe(git.commit('[Prerelease] Bumped version number'));
 });
 
-gulp.task('push-changes', function (cb) {
-  git.push('origin', 'master', cb);
+gulp.task('push-changes', function (done) {
+  git.push('origin', 'master', done);
 });
 
-gulp.task('create-new-tag', function (cb) {
+gulp.task('create-new-tag', function (done) {
   var version = getPackageJsonVersion();
   git.tag(version, 'Created Tag for version: ' + version, function (error) {
     if (error) {
-      return cb(error);
+      return done(error);
     }
-    git.push('origin', 'master', {args: '--tags'}, cb);
+    git.push('origin', 'master', {args: '--tags'}, done);
   });
 
   function getPackageJsonVersion () {
@@ -68,22 +74,13 @@ gulp.task('create-new-tag', function (cb) {
   };
 });
 
-gulp.task('release', function (callback) {
-  runSequence(
-    'bump-version',
-    'changelog',
-    'commit-changes',
-    'push-changes',
-    'create-new-tag',
-    'github-release',
-    function (error) {
-      if (error) {
-        console.log(error.message);
-      } else {
-        console.log('RELEASE FINISHED SUCCESSFULLY');
-      }
-      callback(error);
-    });
-});
+gulp.task('release', gulp.series(
+  'bump-version',
+  'changelog',
+  'commit-changes',
+  'push-changes',
+  'create-new-tag',
+  'github-release'
+));
 
 ```

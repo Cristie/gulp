@@ -1,3 +1,10 @@
+<!-- front-matter
+id: incremental-builds-with-concatenate
+title: Incremental Rebuilding
+hide_title: true
+sidebar_label: Incremental Rebuilding
+-->
+
 # Incremental rebuilding, including operating on full file sets
 
 The trouble with incremental rebuilds is you often want to operate on _all_ processed files, not just single files. For example, you may want to lint and module-wrap just the file(s) that have changed, then concatenate it with all other linted and module-wrapped files. This is difficult without the use of temp files.
@@ -27,7 +34,7 @@ gulp.task('scripts', function() {
 });
 
 gulp.task('watch', function () {
-  var watcher = gulp.watch(scriptsGlob, ['scripts']); // watch the same files in our scripts task
+  var watcher = gulp.watch(scriptsGlob, gulp.series('scripts')); // watch the same files in our scripts task
   watcher.on('change', function (event) {
     if (event.type === 'deleted') {                   // if a file is deleted, forget about it
       delete cached.caches.scripts[event.path];       // gulp-cached remove api

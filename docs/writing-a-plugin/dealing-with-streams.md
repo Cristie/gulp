@@ -1,3 +1,10 @@
+<!-- front-matter
+id: dealing-with-streams
+title: Dealing with Streams
+hide_title: true
+sidebar_label: Dealing with Streams
+-->
+
 # Dealing with streams
 
 > It is highly recommended to write plugins supporting streams. Here is some information on creating a gulp plugin that supports streams.
@@ -12,8 +19,7 @@ Let's implement a plugin prepending some text to files. This plugin supports all
 
 ```js
 var through = require('through2');
-var gutil = require('gulp-util');
-var PluginError = gutil.PluginError;
+var PluginError = require('plugin-error');
 
 // consts
 const PLUGIN_NAME = 'gulp-prefixer';
@@ -76,4 +82,3 @@ gulp.src('files/**/*.js', { buffer: false })
 ## Some plugins using streams
 
 * [gulp-svgicons2svgfont](https://github.com/nfroidure/gulp-svgiconstosvgfont)
-

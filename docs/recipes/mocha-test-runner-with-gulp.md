@@ -1,9 +1,16 @@
+<!-- front-matter
+id: mocha-test-runner-with-gulp
+title: Mocha test-runner with Gulp
+hide_title: true
+sidebar_label: Mocha test-runner with Gulp
+-->
+
 # Mocha test-runner with gulp
 
 ### Passing shared module in all tests
 
 ```js
-// npm install gulp gulp-mocha
+// npm install gulp@next gulp-mocha
 
 var gulp = require('gulp');
 var mocha = require('gulp-mocha');
@@ -22,19 +29,19 @@ gulp.task('default', function() {
 ### Running mocha tests when files change
 
 ```js
-// npm install gulp gulp-mocha gulp-util
+// npm install gulp@next gulp-mocha gulplog
 
 var gulp = require('gulp');
 var mocha = require('gulp-mocha');
-var gutil = require('gulp-util');
-
-gulp.task('default', function() {
-      gulp.watch(['lib/**', 'test/**'], ['mocha']);
-});
+var log = require('gulplog');
 
 gulp.task('mocha', function() {
     return gulp.src(['test/*.js'], { read: false })
         .pipe(mocha({ reporter: 'list' }))
-        .on('error', gutil.log);
+        .on('error', log.error);
+});
+
+gulp.task('watch-mocha', function() {
+    gulp.watch(['lib/**', 'test/**'], gulp.series('mocha'));
 });
 ```
